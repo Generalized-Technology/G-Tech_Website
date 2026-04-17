@@ -45,11 +45,21 @@ export interface GalleryImage {
   caption: string;
 }
 
+export interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  link: string;
+  category: string;
+}
+
 export const domains: Domain[] = [
   {
     id: "photography",
     name: "Photography",
-    description: "Capturing club moments and visual stories with precision and creativity.",
+    description:
+      "Capturing club moments and visual stories with precision and creativity.",
     icon: "Camera",
   },
   {
@@ -67,44 +77,40 @@ export const domains: Domain[] = [
   {
     id: "graphic-design",
     name: "Graphic Design",
-    description: "Creating posters, branding, and visual identity that stands out.",
+    description:
+      "Creating posters, branding, and visual identity that stands out.",
     icon: "Palette",
   },
   {
     id: "web-dev",
     name: "Web Development",
-    description: "Building digital experiences and club sites with modern technologies.",
+    description:
+      "Building digital experiences and club sites with modern technologies.",
     icon: "Code",
   },
   {
     id: "documentation",
     name: "Documentation",
-    description: "Reports, records, and structured content management for club.",
+    description:
+      "Reports, records, and structured content management for club.",
     icon: "FileText",
   },
 ];
 
 export const leads: Lead[] = [
   {
-    id: "1",
-    name: "Alex Rivera",
-    role: "Club President",
-    domain: "Overall Management",
-    image: "https://picsum.photos/seed/lead1/400/400",
-    links: {
-      linkedin: "#",
-      portfolio: "#",
-    }
+    id: "a1",
+    name: "Monishwar",
+    role: "Lead",
+    domain: "Over-all Club",
+    image: "/images/leads/2526/monish.webp",
   },
   {
-    id: "2",
-    name: "Sarah Chen",
-    role: "Technical Lead",
-    domain: "Web Development",
-    image: "https://picsum.photos/seed/lead2/400/400",
-    links: {
-      linkedin: "#",
-    }
+    id: "a2",
+    name: "Devanand",
+    role: "Co-Lead",
+    domain: "Over-all Club",
+    image: "/images/leads/2526/deva.webp",
   },
   {
     id: "3",
@@ -114,7 +120,7 @@ export const leads: Lead[] = [
     image: "https://picsum.photos/seed/lead3/400/400",
     links: {
       instagram: "#",
-    }
+    },
   },
   {
     id: "4",
@@ -135,19 +141,19 @@ export const leadArchive: LeadArchive[] = [
     leads: [
       {
         id: "a1",
-        name: "Marcus Thorne",
-        role: "President",
-        domain: "Management",
-        image: "https://picsum.photos/seed/past1/400/400",
+        name: "Monishwar",
+        role: "Lead",
+        domain: "Over-all Club",
+        image: "/images/leads/2526/monish.webp",
       },
       {
         id: "a2",
-        name: "Lila Vance",
-        role: "Vice President",
-        domain: "Operations",
+        name: "Devanand",
+        role: "Co-Lead",
+        domain: "Over-all Club",
         image: "https://picsum.photos/seed/past2/400/400",
-      }
-    ]
+      },
+    ],
   },
   {
     year: "2023–24",
@@ -158,16 +164,17 @@ export const leadArchive: LeadArchive[] = [
         role: "President",
         domain: "Management",
         image: "https://picsum.photos/seed/past3/400/400",
-      }
-    ]
-  }
+      },
+    ],
+  },
 ];
 
 export const events: Event[] = [
   {
     id: "1",
     title: "Tech-X 2024",
-    description: "The biggest annual technical symposium featuring workshops, hackathons, and guest lectures.",
+    description:
+      "The biggest annual technical symposium featuring workshops, hackathons, and guest lectures.",
     date: "March 15, 2024",
     driveLink: "#",
     image: "https://picsum.photos/seed/event1/800/450",
@@ -175,7 +182,8 @@ export const events: Event[] = [
   {
     id: "2",
     title: "Code-A-Thon",
-    description: "A 24-hour intense coding competition to solve real-world problems using technology.",
+    description:
+      "A 24-hour intense coding competition to solve real-world problems using technology.",
     date: "January 20, 2024",
     driveLink: "#",
     image: "https://picsum.photos/seed/event2/800/450",
@@ -183,7 +191,8 @@ export const events: Event[] = [
   {
     id: "3",
     title: "Design Workshop",
-    description: "A hands-on session on UI/UX principles and modern graphic design tools.",
+    description:
+      "A hands-on session on UI/UX principles and modern graphic design tools.",
     date: "December 10, 2023",
     driveLink: "#",
     image: "https://picsum.photos/seed/event3/800/450",
@@ -191,7 +200,8 @@ export const events: Event[] = [
   {
     id: "4",
     title: "Design Workshop",
-    description: "A hands-on session on UI/UX principles and modern graphic design tools.",
+    description:
+      "A hands-on session on UI/UX principles and modern graphic design tools.",
     date: "December 10, 2023",
     driveLink: "#",
     image: "https://picsum.photos/seed/event3/800/450",
@@ -227,10 +237,70 @@ export const videos: Video[] = [
 ];
 
 export const galleryImages: GalleryImage[] = [
-  { id: "1", url: "https://picsum.photos/seed/gal1/800/600", caption: "Team Meeting" },
-  { id: "2", url: "https://picsum.photos/seed/gal2/600/800", caption: "Event Setup" },
-  { id: "3", url: "https://picsum.photos/seed/gal3/800/800", caption: "Workshop Session" },
-  { id: "4", url: "https://picsum.photos/seed/gal4/800/600", caption: "Hackathon Night" },
-  { id: "5", url: "https://picsum.photos/seed/gal5/600/600", caption: "Award Ceremony" },
-  { id: "6", url: "https://picsum.photos/seed/gal6/800/600", caption: "Group Photo" },
+  {
+    id: "1",
+    url: "https://picsum.photos/seed/gal1/800/600",
+    caption: "Team Meeting",
+  },
+  {
+    id: "2",
+    url: "https://picsum.photos/seed/gal2/600/800",
+    caption: "Event Setup",
+  },
+  {
+    id: "3",
+    url: "https://picsum.photos/seed/gal3/800/800",
+    caption: "Workshop Session",
+  },
+  {
+    id: "4",
+    url: "https://picsum.photos/seed/gal4/800/600",
+    caption: "Hackathon Night",
+  },
+  {
+    id: "5",
+    url: "https://picsum.photos/seed/gal5/600/600",
+    caption: "Award Ceremony",
+  },
+  {
+    id: "6",
+    url: "https://picsum.photos/seed/gal6/800/600",
+    caption: "Group Photo",
+  },
 ];
+
+export const tools: Tool[] = [
+  {
+    id: "asset-portal",
+    name: "Asset Portal",
+    description: "Centrally managed library of high-resolution club assets, logos, and brand guidelines.",
+    icon: "FolderOpen",
+    link: "#",
+    category: "Resources"
+  },
+  {
+    id: "event-manager",
+    name: "Event Manager",
+    description: "Internal dashboard for planning, tracking, and executing technical events and workshops.",
+    icon: "Layout",
+    link: "#",
+    category: "Internal"
+  },
+  {
+    id: "gtech-cli",
+    name: "G-Tech CLI",
+    description: "command-line interface for automating club-specific workflows and student projects.",
+    icon: "Terminal",
+    link: "#",
+    category: "Software"
+  },
+  {
+    id: "cert-gen",
+    name: "Cert-Gen",
+    description: "automated system for generating and distributing verifiable event participation certificates.",
+    icon: "Award",
+    link: "#",
+    category: "Utility"
+  }
+];
+

@@ -1,14 +1,12 @@
 import { motion } from "motion/react";
 import { events } from "@/data/clubData";
 import { SectionHeader, GlassCard, TiltCard } from "@/components/UIElements";
-import { VideoMarquee } from "@/components/VideoMarquee";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Calendar } from "lucide-react";
 
 export default function Events() {
   return (
     <main className="pt-32 pb-20 bg-mesh min-h-screen">
-      <VideoMarquee />
 
       <section className="py-32 relative">
         <div className="container mx-auto px-6">

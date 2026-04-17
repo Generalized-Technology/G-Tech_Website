@@ -15,6 +15,7 @@ import Gallery from "./pages/Gallery";
 import Support from "./pages/Support";
 import OverallLeads from "./pages/OverallLeads";
 import Join from "./pages/Join";
+import Tools from "./pages/Tools";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="/support" element={<Support />} />
             <Route path="/overall-leads" element={<OverallLeads />} />
             <Route path="/join" element={<Join />} />
+            <Route path="/tools" element={<Tools />} />
           </Routes>
         </div>
 
