@@ -16,13 +16,13 @@ export function Footer() {
               The official technical club of Guru Nanak College. Powering creativity, technology, and technical support for a digital future.
             </p>
             <div className="flex gap-6">
-              <a href="https://www.instagram.com/gtechclub_gnc/" className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white/50 hover:text-neon-purple hover:border-neon-purple/50 transition-all duration-500">
+              <a href="https://www.instagram.com/g_techgnc/" target="_blank" className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white/50 hover:text-neon-purple hover:border-neon-purple/50 transition-all duration-500">
                 <Instagram className="w-6 h-6" />
               </a>
-              <a href="https://github.com/Generalized-Technology/" className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white/50 hover:text-neon-purple hover:border-neon-purple/50 transition-all duration-500">
+              <a href="https://github.com/Generalized-Technology/" target="_blank" className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white/50 hover:text-neon-purple hover:border-neon-purple/50 transition-all duration-500">
                 <Github className="w-6 h-6" />
               </a>
-              <a href="mailto: gtech@gurunanakcollege.edu.in" className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white/50 hover:text-neon-purple hover:border-neon-purple/50 transition-all duration-500">
+              <a href="mailto: gtech@gurunanakcollege.edu.in" target="_blank" className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white/50 hover:text-neon-purple hover:border-neon-purple/50 transition-all duration-500">
                 <Mail className="w-6 h-6" />
               </a>
             </div>

@@ -1,13 +1,29 @@
+import React, { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { leads } from "@/data/clubData";
 import { SectionHeader, GlassCard, TiltCard } from "@/components/UIElements";
 import { Linkedin, Globe, Instagram, ArrowRight, History } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 export default function About() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const [leadership, setLeadership] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchLeads = async () => {
+      const { data } = await supabase
+        .from("club_leads")
+        .select("*")
+        .eq("year", "2025–26")
+        .order("order_index", { ascending: true });
+      if (data) {
+        setLeadership(data);
+      }
+    };
+    fetchLeads();
+  }, []);
 
   return (
     <main className="pt-32 pb-20 bg-mesh">
@@ -101,7 +117,7 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {leads.map((lead, index) => (
+            {leadership.map((lead, index) => (
               <motion.div
                 key={lead.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -122,25 +138,31 @@ export default function About() {
 
                       {/* Social Overlay */}
                       <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">
-                        {lead.links?.linkedin && (
+                        {lead.linkedin && (
                           <a
-                            href={lead.links.linkedin}
+                            href={lead.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-neon-blue transition-colors"
                           >
                             <Linkedin className="w-5 h-5" />
                           </a>
                         )}
-                        {lead.links?.portfolio && (
+                        {lead.portfolio && (
                           <a
-                            href={lead.links.portfolio}
+                            href={lead.portfolio}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-neon-purple transition-colors"
                           >
                             <Globe className="w-5 h-5" />
                           </a>
                         )}
-                        {lead.links?.instagram && (
+                        {lead.instagram && (
                           <a
-                            href={lead.links.instagram}
+                            href={lead.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-pink-500 transition-colors"
                           >
                             <Instagram className="w-5 h-5" />
@@ -157,7 +179,7 @@ export default function About() {
                         {lead.name}
                       </h4>
                       <p className="text-white/40 text-sm font-medium">
-                        {lead.role}
+                        {lead.year}
                       </p>
                     </div>
                   </GlassCard>

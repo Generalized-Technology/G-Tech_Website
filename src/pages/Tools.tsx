@@ -36,7 +36,7 @@ export default function Tools() {
       <section className="py-20 relative px-6">
         <div className="container mx-auto">
           <SectionHeader 
-            title="The G-Tech"
+            title="The G-Tech Tools"
             subtitle="Explore our arsenal of custom-built tools, frameworks, and digital utilities designed to empower members and streamline club operations."
           />
 

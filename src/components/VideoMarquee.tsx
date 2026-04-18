@@ -1,10 +1,20 @@
+import React, { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { videos } from "@/data/clubData";
 import { SectionHeader } from "./UIElements";
+import { supabase } from "@/lib/supabase";
 
 export function VideoMarquee() {
   const { scrollYProgress } = useScroll();
   const x = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const [videoList, setVideoList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      const { data } = await supabase.from("videos").select("*").order("created_at");
+      if (data) setVideoList(data);
+    };
+    fetchVideos();
+  }, []);
 
   return (
     <section className="py-40 bg-mesh overflow-hidden relative">
@@ -23,7 +33,6 @@ export function VideoMarquee() {
       </div>
 
       <div className="relative mt-20">
-        {/* Glow behind marquee */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-40 bg-neon-purple/10 blur-[120px] rounded-full pointer-events-none" />
 
         <motion.div
@@ -35,7 +44,7 @@ export function VideoMarquee() {
           }}
           className="flex gap-12 w-max px-6"
         >
-          {[...videos, ...videos].map((video, index) => (
+          {videoList.length > 0 ? [...videoList, ...videoList].map((video, index) => (
             <motion.div
               key={`${video.id}-${index}`}
               whileHover={{ scale: 1.05, y: -10 }}
@@ -56,7 +65,9 @@ export function VideoMarquee() {
                 <div className="w-16 h-1.5 bg-neon-purple mt-4 rounded-full shadow-[0_0_10px_rgba(168,85,247,1)]" />
               </div>
             </motion.div>
-          ))}
+          )) : (
+            <div className="w-screen flex justify-center py-20 text-white/20">No archives loaded yet.</div>
+          )}
         </motion.div>
       </div>
     </section>

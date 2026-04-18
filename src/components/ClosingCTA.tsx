@@ -32,27 +32,27 @@ export function ClosingCTA() {
             Join the Elite Community
           </motion.div>
 
-          <h2 className="text-5xl md:text-8xl font-display text-white mb-10 leading-[0.9] uppercase">
-            READY TO <span className="text-gradient drop-shadow-[0_0_30px_rgba(168,85,247,0.4)]">CREATE</span> <br /> THE FUTURE?
+          <h2 className="text-4xl sm:text-5xl md:text-8xl font-display text-white mb-10 leading-tight md:leading-[0.9] uppercase">
+            READY TO <span className="text-gradient drop-shadow-[0_0_30px_rgba(168,85,247,0.4)]">CREATE</span> <br className="hidden md:block" /> THE FUTURE?
           </h2>
           
-          <p className="text-white/60 text-xl md:text-2xl max-w-3xl mx-auto mb-16 leading-relaxed font-medium">
+          <p className="text-white/60 text-lg md:text-2xl max-w-3xl mx-auto mb-16 leading-relaxed font-medium px-4">
             Whether you're a photographer, coder, or designer, there's a place for you in G-Tech. Let's build something extraordinary together.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-8">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-8 px-6">
             <Link
               to="/join"
-              className="btn-primary flex items-center gap-3 px-12 py-10 rounded-2xl text-xl uppercase tracking-widest group no-underline"
+              className="btn-primary flex items-center justify-center gap-3 px-8 md:px-12 py-6 md:py-10 rounded-2xl text-lg md:text-xl uppercase tracking-widest group no-underline"
             >
               Join Us Now
-              <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
+              <ArrowRight className="ml-3 w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-2 transition-transform" />
             </Link>
             <Button
               size="lg"
               variant="outline"
               render={<Link to="/support" />}
-              className="btn-secondary px-12 py-10 rounded-2xl text-xl uppercase tracking-widest"
+              className="btn-secondary px-8 md:px-12 py-6 md:py-10 rounded-2xl text-lg md:text-xl uppercase tracking-widest"
             >
               Get Support
             </Button>

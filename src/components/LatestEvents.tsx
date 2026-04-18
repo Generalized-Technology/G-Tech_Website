@@ -1,12 +1,28 @@
-import { useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "motion/react";
-import { ExternalLink, Calendar as CalendarIcon, ArrowRight } from "lucide-react";
-import { events } from "@/data/clubData";
+import { ExternalLink, Calendar as CalendarIcon, ArrowRight, Clock } from "lucide-react";
 import { SectionHeader, GlassCard, TiltCard } from "./UIElements";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 
 export function LatestEvents() {
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(3);
+      if (!error) setEvents(data);
+      setLoading(false);
+    };
+    fetchEvents();
+  }, []);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -49,63 +65,71 @@ export function LatestEvents() {
             />
           </motion.div>
 
-          <div className="space-y-32">
-            {events.slice(0, 3).map((event, index) => (
-              <motion.div
-                key={event.id}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className={`flex flex-col md:flex-row items-center gap-16 ${
-                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
-              >
-                <div className="flex-1 w-full">
-                  <TiltCard>
-                    <GlassCard className="border border-white/5 hover:border-neon-blue/50 transition-all duration-500">
-                      <div className="relative aspect-video rounded-2xl overflow-hidden mb-8 group/img">
-                        <img
-                          src={event.image}
-                          alt={event.title}
-                          className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700"
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
-                      
-                      <div className="flex items-center gap-3 text-white/40 text-sm font-bold mb-4 uppercase tracking-widest">
-                        <CalendarIcon className="w-4 h-4 text-neon-blue" />
-                        {event.date}
-                      </div>
-                      
-                      <h3 className="text-4xl font-sans font-semibold text-white mb-6 uppercase">{event.title}</h3>
-                      <p className="text-white/60 text-lg mb-8 leading-relaxed">
-                        {event.description}
-                      </p>
-                      
-                      <Button
-                        render={<a href={event.driveLink} target="_blank" rel="noopener noreferrer" />}
-                        variant="outline"
-                        className="btn-secondary px-8 py-6 rounded-xl group/btn"
-                      >
-                        View Photos
-                        <ExternalLink className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                      </Button>
-                    </GlassCard>
-                  </TiltCard>
-                </div>
-
-                {/* Center Dot */}
-                <div className="relative z-10 hidden md:flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full glass border-2 border-neon-purple flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.4)]">
-                    <div className="w-6 h-6 rounded-full bg-neon-purple animate-pulse" />
+          {loading ? (
+             <div className="text-center py-20 flex flex-col items-center gap-4">
+               <Clock className="w-10 h-10 text-neon-purple animate-spin" />
+               <p className="text-white/20 uppercase tracking-widest text-xs">Loading Timeline</p>
+             </div>
+          ) : (
+            <div className="space-y-32">
+              {events.map((event, index) => (
+                <motion.div
+                  key={event.id}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className={`flex flex-col md:flex-row items-center gap-16 ${
+                    index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                  }`}
+                >
+                  <div className="flex-1 w-full">
+                    <TiltCard>
+                      <GlassCard className="border border-white/5 hover:border-neon-blue/50 transition-all duration-500">
+                        <div className="relative aspect-video rounded-2xl overflow-hidden mb-8 group/img">
+                          <img
+                            src={event.image}
+                            alt={event.title}
+                            className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700"
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
+                        
+                        <div className="flex items-center gap-3 text-white/40 text-sm font-bold mb-4 uppercase tracking-widest">
+                          <CalendarIcon className="w-4 h-4 text-neon-blue" />
+                          {event.date}
+                        </div>
+                        
+                        <h3 className="text-4xl font-sans font-semibold text-white mb-6 uppercase">{event.title}</h3>
+                        <p className="text-white/60 text-lg mb-8 leading-relaxed line-clamp-3">
+                          {event.description}
+                        </p>
+                        
+                        <Button
+                          render={<a href={event.drive_link} target="_blank" rel="noopener noreferrer" />}
+                          variant="outline"
+                          className="btn-secondary px-8 py-6 rounded-xl group/btn"
+                        >
+                          View Photos
+                          <ExternalLink className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                        </Button>
+                      </GlassCard>
+                    </TiltCard>
                   </div>
-                </div>
 
-                <div className="flex-1 hidden md:block" />
-              </motion.div>
-            ))}
-          </div>
+                  {/* Center Dot */}
+                  <div className="relative z-10 hidden md:flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full glass border-2 border-neon-purple flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.4)]">
+                      <div className="w-6 h-6 rounded-full bg-neon-purple animate-pulse" />
+                    </div>
+                  </div>
+
+                  <div className="flex-1 hidden md:block" />
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
+
 
         <div className="mt-32 text-center">
           <Button
@@ -122,3 +146,5 @@ export function LatestEvents() {
     </section>
   );
 }
+
+

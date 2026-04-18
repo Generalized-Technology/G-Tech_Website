@@ -8,7 +8,6 @@ export interface Domain {
 export interface Lead {
   id: string;
   name: string;
-  role: string;
   image: string;
   domain: string;
   contact?: string;
@@ -101,21 +100,18 @@ export const leads: Lead[] = [
   {
     id: "a1",
     name: "Monishwar",
-    role: "Lead",
     domain: "Over-all Club",
     image: "/images/leads/2526/monish.webp",
   },
   {
     id: "a2",
     name: "Devanand",
-    role: "Co-Lead",
     domain: "Over-all Club",
     image: "/images/leads/2526/deva.webp",
   },
   {
     id: "3",
     name: "Jordan Smith",
-    role: "Creative Head",
     domain: "Graphic Design",
     image: "https://picsum.photos/seed/lead3/400/400",
     links: {
@@ -125,7 +121,6 @@ export const leads: Lead[] = [
   {
     id: "4",
     name: "Elena Gilbert",
-    role: "Media Lead",
     domain: "Photography",
     image: "https://picsum.photos/seed/lead4/400/400",
   },
@@ -142,14 +137,12 @@ export const leadArchive: LeadArchive[] = [
       {
         id: "a1",
         name: "Monishwar",
-        role: "Lead",
         domain: "Over-all Club",
         image: "/images/leads/2526/monish.webp",
       },
       {
         id: "a2",
         name: "Devanand",
-        role: "Co-Lead",
         domain: "Over-all Club",
         image: "https://picsum.photos/seed/past2/400/400",
       },
@@ -161,7 +154,6 @@ export const leadArchive: LeadArchive[] = [
       {
         id: "b1",
         name: "David Miller",
-        role: "President",
         domain: "Management",
         image: "https://picsum.photos/seed/past3/400/400",
       },

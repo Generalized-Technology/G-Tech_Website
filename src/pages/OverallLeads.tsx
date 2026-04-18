@@ -1,13 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { leadArchive } from "@/data/clubData";
 import { SectionHeader, GlassCard, TiltCard } from "@/components/UIElements";
-import { Linkedin, Globe, Instagram, Users } from "lucide-react";
+import { Linkedin, Globe, Instagram, Users, Clock } from "lucide-react";
+
+import { supabase } from "@/lib/supabase";
 
 export default function OverallLeads() {
-  const [activeYear, setActiveYear] = useState(leadArchive[0].year);
+  const [activeYear, setActiveYear] = useState("2025–26");
+  const [leads, setLeads] = useState<any[]>([]);
+  const [years, setYears] = useState<string[]>(["2025–26", "2024–25", "2023–24"]);
+  const [loading, setLoading] = useState(true);
 
-  const currentArchive = leadArchive.find((a) => a.year === activeYear);
+  useEffect(() => {
+    fetchLeads();
+  }, [activeYear]);
+
+  const fetchLeads = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("club_leads")
+      .select("*")
+      .eq("year", activeYear);
+    
+    if (!error && data) {
+      const sortedData = [...data].sort((a, b) => {
+        const priority = (domain: string) => {
+          const d = domain.toLowerCase();
+          if (d === 'lead') return 1;
+          if (d.includes('co-lead') || d.includes('colead')) return 2;
+          return 3;
+        };
+        return priority(a.domain) - priority(b.domain);
+      });
+      setLeads(sortedData);
+    }
+    setLoading(false);
+  };
+
 
   return (
     <main className="pt-32 pb-20 min-h-screen bg-mesh">
@@ -20,17 +50,17 @@ export default function OverallLeads() {
 
         {/* Year Tabs */}
         <div className="flex flex-wrap justify-center gap-4 mb-20">
-          {leadArchive.map((archive) => (
+          {years.map((year) => (
             <button
-              key={archive.year}
-              onClick={() => setActiveYear(archive.year)}
+              key={year}
+              onClick={() => setActiveYear(year)}
               className={`px-8 py-3 rounded-full  transition-all duration-300 ${
-                activeYear === archive.year
+                activeYear === year
                   ? "bg-neon-purple text-white glow-primary scale-105"
                   : "glass text-white/50 hover:text-white hover:bg-white/5"
               }`}
             >
-              {archive.year}
+              {year}
             </button>
           ))}
         </div>
@@ -45,7 +75,11 @@ export default function OverallLeads() {
             transition={{ duration: 0.4 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
           >
-            {currentArchive?.leads.map((lead, index) => (
+            {loading ? (
+              <div className="col-span-full text-center py-20">
+                <Clock className="w-10 h-10 text-neon-purple animate-spin mx-auto" />
+              </div>
+            ) : leads.map((lead, index) => (
               <motion.div
                 key={lead.id}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -65,28 +99,28 @@ export default function OverallLeads() {
                     </div>
                     
                     <h3 className="text-xl font-display  text-white mb-1">{lead.name}</h3>
-                    <p className="text-neon-purple text-xs  uppercase  mb-2">{lead.role}</p>
+
                     <p className="text-white/40 text-sm mb-6">{lead.domain}</p>
 
                     {/* Social Links */}
                     <div className="flex items-center justify-center gap-4 mt-auto">
-                      {lead.links?.linkedin ? (
-                        <a href={lead.links.linkedin} className="text-white/40   hover:text-neon-blue transition-colors">
+                      {lead.linkedin ? (
+                        <a href={lead.linkedin} target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-neon-blue transition-colors">
                           <Linkedin className="w-5 h-5" />
                         </a>
                       ) : null}
-                      {lead.links?.portfolio ? (
-                        <a href={lead.links.portfolio} className="text-white/40 hover:text-neon-purple transition-colors">
+                      {lead.portfolio ? (
+                        <a href={lead.portfolio} target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-neon-purple transition-colors">
                           <Globe className="w-5 h-5" />
                         </a>
                       ) : null}
-                      {lead.links?.instagram ? (
-                        <a href={lead.links.instagram} className="text-white/40 hover:text-pink-500 transition-colors">
+                      {lead.instagram ? (
+                        <a href={lead.instagram} target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-pink-500 transition-colors">
                           <Instagram className="w-5 h-5" />
                         </a>
                       ) : null}
-                      {!lead.links && (
-                        <span className="text-white/20 text-[10px] uppercase  ">No links available</span>
+                      {!lead.linkedin && !lead.portfolio && !lead.instagram && (
+                        <span className="text-white/20 text-[10px] uppercase">No links available</span>
                       )}
                     </div>
                   </GlassCard>
@@ -96,7 +130,7 @@ export default function OverallLeads() {
           </motion.div>
         </AnimatePresence>
 
-        {currentArchive?.leads.length === 0 && (
+        {!loading && leads.length === 0 && (
           <div className="text-center py-20">
             <Users className="w-16 h-16 text-white/10 mx-auto mb-4" />
             <p className="text-white/30 text-lg">No records found for this period.</p>
@@ -106,3 +140,5 @@ export default function OverallLeads() {
     </main>
   );
 }
+
+

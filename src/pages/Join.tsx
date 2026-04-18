@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { CheckCircle2, ArrowLeft, Send } from "lucide-react";
+import { CheckCircle2, ArrowLeft, Send, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,15 +13,45 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { supabase } from "@/lib/supabase";
+
 export default function Join() {
+  const [formType, setFormType] = useState<"gnc" | "common">("gnc");
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Form State
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    whatsapp: "",
+    department: "",
+    year: "",
+    interest: "",
+    roll_number: "",
+    register_number: "",
+    portfolio_link: "",
+    purpose: ""
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    // In a real app, you'd send data to a backend here
+    setIsSubmitting(true);
+
+    const { error } = await supabase.from("applications").insert([{
+      ...formData,
+      form_type: formType // added for tracking
+    }]);
+
+    if (!error) {
+      setSubmitted(true);
+    } else {
+      alert("Error submitting application: " + error.message);
+    }
+    setIsSubmitting(false);
   };
+
 
   return (
     <div className="min-h-screen bg-mesh pt-32 pb-20 px-6">
@@ -46,7 +76,7 @@ export default function Join() {
               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-purple/10 blur-[150px] -z-10 animate-pulse" />
               <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-neon-blue/5 blur-[150px] -z-10 animate-pulse delay-1000" />
 
-              <div className="mb-16">
+              <div className="mb-12">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -58,8 +88,32 @@ export default function Join() {
                   Join the <span className="text-gradient">Elite</span>
                 </h1>
                 <p className="text-white/60 text-xl font-medium max-w-2xl leading-relaxed">
-                  Apply to become a member of Guru Nanak College's premier technical club. We're looking for passionate creators and innovators.
+                  Apply to become a member of Guru Nanak College's premier technical club.
                 </p>
+              </div>
+
+              {/* Form Type Switcher */}
+              <div className="flex p-1 bg-white/5 rounded-2xl mb-12 max-w-md">
+                <button
+                  onClick={() => setFormType("gnc")}
+                  className={`flex-1 py-4 px-6 rounded-xl text-xs uppercase tracking-widest font-bold transition-all ${
+                    formType === "gnc" 
+                      ? "bg-neon-purple text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]" 
+                      : "text-white/40 hover:text-white"
+                  }`}
+                >
+                  GNC Student
+                </button>
+                <button
+                  onClick={() => setFormType("common")}
+                  className={`flex-1 py-4 px-6 rounded-xl text-xs uppercase tracking-widest font-bold transition-all ${
+                    formType === "common" 
+                      ? "bg-neon-blue text-white shadow-[0_0_20px_rgba(59,130,246,0.4)]" 
+                      : "text-white/40 hover:text-white"
+                  }`}
+                >
+                  External / Common
+                </button>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-10">
@@ -71,6 +125,37 @@ export default function Join() {
                     <Input
                       required
                       placeholder="John Doe"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple focus:ring-neon-purple/20 rounded-[24px] transition-all duration-300"
+                    />
+                  </div>
+                  <div className="group space-y-4">
+                    <label className="text-xs text-white/50 ml-1 uppercase tracking-[0.3em] font-bold group-focus-within:text-neon-purple transition-colors">
+                      Email Address
+                    </label>
+                    <Input
+                      required
+                      type="email"
+                      placeholder="john@example.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple focus:ring-neon-purple/20 rounded-[24px] transition-all duration-300"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="group space-y-4">
+                    <label className="text-xs text-white/50 ml-1 uppercase tracking-[0.3em] font-bold group-focus-within:text-neon-purple transition-colors">
+                      WhatsApp Number
+                    </label>
+                    <Input
+                      required
+                      type="tel"
+                      placeholder="+91 00000 00000"
+                      value={formData.whatsapp}
+                      onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
                       className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple focus:ring-neon-purple/20 rounded-[24px] transition-all duration-300"
                     />
                   </div>
@@ -81,6 +166,8 @@ export default function Join() {
                     <Input
                       required
                       placeholder="e.g. Computer Applications"
+                      value={formData.department}
+                      onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                       className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple focus:ring-neon-purple/20 rounded-[24px] transition-all duration-300"
                     />
                   </div>
@@ -91,8 +178,12 @@ export default function Join() {
                     <label className="text-xs text-white/50 ml-1 uppercase tracking-[0.3em] font-bold group-focus-within:text-neon-purple transition-colors">
                       Year of Study
                     </label>
-                    <Select required>
-                      <SelectTrigger className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple rounded-[24px] transition-all duration-300">
+                    <Select 
+                      required 
+                      value={formData.year} 
+                      onValueChange={(value) => setFormData({ ...formData, year: value })}
+                    >
+                      <SelectTrigger className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple rounded-[24px] transition-all duration-300 text-white">
                         <SelectValue placeholder="Select current year" />
                       </SelectTrigger>
                       <SelectContent className="glass-dark border-white/10 text-white backdrop-blur-2xl">
@@ -106,8 +197,12 @@ export default function Join() {
                     <label className="text-xs text-white/50 ml-1 uppercase tracking-[0.3em] font-bold group-focus-within:text-neon-purple transition-colors">
                       Domain of Interest
                     </label>
-                    <Select required>
-                      <SelectTrigger className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple rounded-[24px] transition-all duration-300">
+                    <Select 
+                      required 
+                      value={formData.interest}
+                      onValueChange={(value) => setFormData({ ...formData, interest: value })}
+                    >
+                      <SelectTrigger className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple rounded-[24px] transition-all duration-300 text-white">
                         <SelectValue placeholder="What's your niche?" />
                       </SelectTrigger>
                       <SelectContent className="glass-dark border-white/10 text-white backdrop-blur-2xl">
@@ -122,12 +217,47 @@ export default function Join() {
                   </div>
                 </div>
 
+                {formType === "gnc" && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-10"
+                  >
+                    <div className="group space-y-4">
+                      <label className="text-xs text-white/50 ml-1 uppercase tracking-[0.3em] font-bold group-focus-within:text-neon-purple transition-colors">
+                        Roll Number
+                      </label>
+                      <Input
+                        required
+                        placeholder="21-1234-56"
+                        value={formData.roll_number}
+                        onChange={(e) => setFormData({ ...formData, roll_number: e.target.value })}
+                        className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple rounded-[24px] transition-all duration-300"
+                      />
+                    </div>
+                    <div className="group space-y-4">
+                      <label className="text-xs text-white/50 ml-1 uppercase tracking-[0.3em] font-bold group-focus-within:text-neon-purple transition-colors">
+                        Register Number
+                      </label>
+                      <Input
+                        required
+                        placeholder="122112345"
+                        value={formData.register_number}
+                        onChange={(e) => setFormData({ ...formData, register_number: e.target.value })}
+                        className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple rounded-[24px] transition-all duration-300"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+
                 <div className="group space-y-4">
                   <label className="text-xs text-white/50 ml-1 uppercase tracking-[0.3em] font-bold group-focus-within:text-neon-purple transition-colors">
                     Portfolio Link (Optional)
                   </label>
                   <Input
                     placeholder="https://behance.net/johndoe"
+                    value={formData.portfolio_link}
+                    onChange={(e) => setFormData({ ...formData, portfolio_link: e.target.value })}
                     className="glass border-white/10 h-16 px-8 text-lg focus:border-neon-purple rounded-[24px] transition-all duration-300"
                   />
                 </div>
@@ -139,6 +269,8 @@ export default function Join() {
                   <Textarea
                     required
                     placeholder="Why G-Tech? Tell us about your journey and ambition..."
+                    value={formData.purpose}
+                    onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
                     className="glass border-white/10 focus:border-neon-purple min-h-[200px] p-8 text-lg rounded-[32px] focus:ring-neon-purple/20 transition-all duration-300"
                   />
                 </div>
@@ -146,10 +278,15 @@ export default function Join() {
                 <Button
                   type="submit"
                   size="lg"
+                  disabled={isSubmitting}
                   className="w-full btn-primary py-10 rounded-[28px] text-xl uppercase tracking-[0.4em] font-black shadow-[0_20px_50px_rgba(168,85,247,0.4)] hover:shadow-[0_25px_60px_rgba(168,85,247,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500"
                 >
-                  Request Membership
-                  <Send className="ml-3 w-6 h-6" />
+                  {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : (
+                    <>
+                      Request Membership
+                      <Send className="ml-3 w-6 h-6" />
+                    </>
+                  )}
                 </Button>
               </form>
             </motion.div>

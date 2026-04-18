@@ -15,6 +15,7 @@ const navLinks = [
 ];
 
 export function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
 
@@ -25,6 +26,10 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <motion.nav
@@ -73,18 +78,16 @@ export function Navbar() {
 
         {/* Mobile Nav */}
         <div className="md:hidden flex items-center gap-4">
-          <Sheet>
-            <SheetTrigger 
-              render={
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
                 <button 
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "icon" }),
                     "text-white glass border-white/10 w-12 h-12 rounded-xl"
                   )} 
-                />
-              }
-            >
-              <Menu className="w-6 h-6" />
+                >
+                  <Menu className="w-6 h-6" />
+                </button>
             </SheetTrigger>
             <SheetContent side="right" className="glass-dark border-l border-white/10 text-white w-full sm:w-[400px] p-0">
               <div className="flex flex-col h-full p-12 bg-mesh">
