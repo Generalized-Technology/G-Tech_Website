@@ -16,7 +16,7 @@ export default function About() {
       const { data } = await supabase
         .from("club_leads")
         .select("*")
-        .eq("year", "2025–26")
+        .eq("show_first", true)
         .order("order_index", { ascending: true });
       if (data) {
         setLeadership(data);

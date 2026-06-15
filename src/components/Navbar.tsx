@@ -42,7 +42,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 lg:px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
           <div className="max-h-[70px] flex items-center justify-center">
-            <img className="max-h-[60px] md:max-h-[70px] max-w-[180px] md:max-w-none object-contain group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]" src="/images/navbarlogo.svg" alt="logo" />
+            <img className="max-h-[60px] md:max-h-[70px] max-w-[180px] md:max-w-none object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]" src="/images/navbarlogo.svg" alt="logo" />
           </div>
         </Link>
 

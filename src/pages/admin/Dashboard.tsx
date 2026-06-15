@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, Navigate } from "react-router-dom";
@@ -26,8 +27,16 @@ import {
   GripVertical,
   Globe,
   Instagram,
-  Linkedin
+  Linkedin,
+  FolderOpen,
+  RefreshCw,
+  Eye,
+  Copy,
+  Check,
+  File
 } from "lucide-react";
+import { StorageBrowser } from "@/components/StorageBrowser";
+import { MediaPickerModal } from "@/components/MediaPickerModal";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -46,7 +55,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-type TabType = "applications" | "leads" | "events" | "gallery" | "videos";
+type TabType = "applications" | "leads" | "events" | "gallery" | "videos" | "uploads";
 
 export default function AdminDashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -58,13 +67,67 @@ export default function AdminDashboard() {
   const [newItem, setNewItem] = useState<any>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [showUploads, setShowUploads] = useState(false);
+  // Uploads tab state
+  const [storageFiles, setStorageFiles] = useState<any[]>([]);
+  const [storageLoading, setStorageLoading] = useState(false);
+  const [deletingFileIds, setDeletingFileIds] = useState<Set<string>>(new Set());
+  const [confirmDeleteFileId, setConfirmDeleteFileId] = useState<string | null>(null);
+  const [copiedFileId, setCopiedFileId] = useState<string | null>(null);
+  const [previewFile, setPreviewFile] = useState<{ url: string; mime: string } | null>(null);
+  
+  // Media Picker state
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerTarget, setPickerTarget] = useState<{ target: 'new' | 'edit', field: string } | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!authLoading && user) {
-      fetchData();
+      if (activeTab === 'uploads') {
+        fetchStorageFiles();
+      } else {
+        fetchData();
+      }
     }
   }, [activeTab, user, authLoading]);
+
+  const fetchStorageFiles = async () => {
+    setStorageLoading(true);
+    const { data, error } = await supabase.storage.from('club_assets').list('uploads', {
+      limit: 200,
+      sortBy: { column: 'created_at', order: 'desc' },
+    });
+    if (!error && data) {
+      setStorageFiles(data.filter((f: any) => f.name !== '.emptyFolderPlaceholder'));
+    }
+    setStorageLoading(false);
+  };
+
+  const getPublicUrl = (name: string) =>
+    supabase.storage.from('club_assets').getPublicUrl(`uploads/${name}`).data.publicUrl;
+
+  const handleDeleteFile = async (file: any) => {
+    setDeletingFileIds(prev => new Set(prev).add(file.id));
+    const { error } = await supabase.storage.from('club_assets').remove([`uploads/${file.name}`]);
+    if (!error) setStorageFiles(prev => prev.filter(f => f.id !== file.id));
+    else alert(error.message);
+    setDeletingFileIds(prev => { const s = new Set(prev); s.delete(file.id); return s; });
+    setConfirmDeleteFileId(null);
+  };
+
+  const handleCopyUrl = (file: any) => {
+    navigator.clipboard.writeText(getPublicUrl(file.name));
+    setCopiedFileId(file.id);
+    setTimeout(() => setCopiedFileId(null), 2000);
+  };
+
+  const formatBytes = (b: number) => {
+    if (!b) return '0 B';
+    const k = 1024, s = ['B','KB','MB','GB'];
+    const i = Math.floor(Math.log(b) / Math.log(k));
+    return `${parseFloat((b / Math.pow(k, i)).toFixed(1))} ${s[i]}`;
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -156,6 +219,18 @@ export default function AdminDashboard() {
       .update({ status })
       .eq("id", id);
     if (!error) fetchData();
+  };
+
+  const toggleYearShowFirst = async (year: string, isCurrentlyShown: boolean) => {
+    // If it's already shown, toggling it off means unfeaturing it.
+    // If it's not shown, we set ALL other years to false, and THIS year to true.
+    if (isCurrentlyShown) {
+      await supabase.from("club_leads").update({ show_first: false }).eq("year", year);
+    } else {
+      await supabase.from("club_leads").update({ show_first: false }).neq("year", year);
+      await supabase.from("club_leads").update({ show_first: true }).eq("year", year);
+    }
+    fetchData();
   };
 
   const deleteItem = async (table: string, id: string) => {
@@ -260,6 +335,15 @@ export default function AdminDashboard() {
             </Button>
             <Button 
               variant="outline" 
+              onClick={() => setShowUploads(true)}
+              className="glass hover:bg-green-500/20 hover:text-green-400 border-white/10 rounded-2xl h-12 px-6 shadow-lg"
+            >
+              <FolderOpen className="w-4 h-4 mr-2 text-green-400" />
+              <span className="hidden sm:inline">View Uploads</span>
+              <span className="sm:hidden">Uploads</span>
+            </Button>
+            <Button 
+              variant="outline" 
               onClick={() => window.open('https://generalized-technology.github.io/Video_Storage/', '_blank', 'noopener,noreferrer')}
               className="glass hover:bg-neon-purple/20 hover:text-white border-white/10 rounded-2xl h-12 px-6 shadow-lg"
             >
@@ -287,7 +371,8 @@ export default function AdminDashboard() {
             { id: "gallery", icon: ImageIcon, label: "Gallery" },
             { id: "videos", icon: Video, label: "Home Video" },
             { id: "leads", icon: Users, label: "Club Leads" },
-            { id: "applications", icon: ClipboardList, label: "Applications" }
+            { id: "applications", icon: ClipboardList, label: "Applications" },
+            { id: "uploads", icon: FolderOpen, label: "Uploads" }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -296,9 +381,11 @@ export default function AdminDashboard() {
                 setIsAdding(false);
               }}
               className={`flex items-center gap-3 px-6 py-4 rounded-2xl transition-all font-bold uppercase tracking-widest text-xs ${
-                activeTab === tab.id 
-                  ? "bg-neon-purple text-white shadow-[0_0_30px_rgba(168,85,247,0.3)]" 
-                  : "text-white/40 hover:text-white hover:bg-white/5"
+                activeTab === tab.id
+                  ? tab.id === 'uploads'
+                    ? 'bg-green-500/80 text-white shadow-[0_0_30px_rgba(34,197,94,0.3)]'
+                    : 'bg-neon-purple text-white shadow-[0_0_30px_rgba(168,85,247,0.3)]'
+                  : 'text-white/40 hover:text-white hover:bg-white/5'
               }`}
             >
               <tab.icon className="w-4 h-4" />
@@ -308,7 +395,123 @@ export default function AdminDashboard() {
         </div>
 
         <div className="glass-dark border-white/10 rounded-[40px] overflow-hidden min-h-[500px]">
-          {loading ? (
+          {/* ── Uploads Tab ─────────────────────────────────── */}
+          {activeTab === 'uploads' ? (
+            <motion.div
+              key="uploads"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="p-8"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h2 className="text-2xl font-display uppercase flex items-center gap-3">
+                    <FolderOpen className="w-6 h-6 text-green-400" /> Uploads
+                  </h2>
+                  <p className="text-white/30 text-xs mt-1">
+                    club_assets / uploads &nbsp;·&nbsp; {storageFiles.length} files
+                    &nbsp;·&nbsp; {formatBytes(storageFiles.reduce((a, f) => a + (f.metadata?.size || 0), 0))}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={fetchStorageFiles}
+                  className="glass border-white/10 h-10 px-5 rounded-xl hover:bg-white/10 flex items-center gap-2"
+                >
+                  <RefreshCw className={`w-4 h-4 ${storageLoading ? 'animate-spin' : ''}`} />
+                  <span className="hidden sm:inline">Refresh</span>
+                </Button>
+              </div>
+
+              {storageLoading ? (
+                <div className="flex items-center justify-center py-32">
+                  <div className="w-10 h-10 border-4 border-green-400 border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : storageFiles.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-32 text-white/20">
+                  <FolderOpen className="w-12 h-12 mb-4" />
+                  <p>No uploads found in club_assets/uploads</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {storageFiles.map((file) => {
+                    const mime = file.metadata?.mimetype || '';
+                    const isImage = mime.startsWith('image/');
+                    const isVideo = mime.startsWith('video/');
+                    const publicUrl = getPublicUrl(file.name);
+                    const isDeleting = deletingFileIds.has(file.id);
+                    const isConfirming = confirmDeleteFileId === file.id;
+                    return (
+                      <motion.div
+                        key={file.id}
+                        layout
+                        animate={{ opacity: isDeleting ? 0.4 : 1 }}
+                        className="group relative glass border border-white/10 rounded-2xl overflow-hidden hover:border-white/25 transition-colors"
+                      >
+                        {/* Thumbnail */}
+                        <div className="relative w-full h-32 bg-white/5 flex items-center justify-center overflow-hidden">
+                          {isImage && <img src={publicUrl} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />}
+                          {isVideo && <video src={publicUrl} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity" muted playsInline />}
+                          {!isImage && !isVideo && <File className="w-10 h-10 text-white/20" />}
+                          {/* Hover actions */}
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            {(isImage || isVideo) && (
+                              <button
+                                onClick={() => setPreviewFile({ url: publicUrl, mime })}
+                                className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 border border-white/20 flex items-center justify-center transition-colors"
+                                title="Preview"
+                              >
+                                <Eye className="w-3.5 h-3.5 text-white" />
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleCopyUrl(file)}
+                              className="w-8 h-8 rounded-full bg-white/15 hover:bg-neon-blue/40 border border-white/20 flex items-center justify-center transition-colors"
+                              title="Copy URL"
+                            >
+                              {copiedFileId === file.id
+                                ? <Check className="w-3.5 h-3.5 text-green-400" />
+                                : <Copy className="w-3.5 h-3.5 text-white" />}
+                            </button>
+                          </div>
+                        </div>
+                        {/* Info row */}
+                        <div className="px-3 py-2.5">
+                          <p className="text-[11px] text-white/60 truncate font-mono" title={file.name}>{file.name}</p>
+                          <div className="flex items-center justify-between mt-1.5">
+                            <span className="text-[10px] text-white/30">{formatBytes(file.metadata?.size)}</span>
+                            {isConfirming ? (
+                              <div className="flex gap-1">
+                                <button
+                                  onClick={() => handleDeleteFile(file)}
+                                  disabled={isDeleting}
+                                  className="text-[10px] px-2 py-0.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/40 font-bold transition-colors"
+                                >Confirm</button>
+                                <button
+                                  onClick={() => setConfirmDeleteFileId(null)}
+                                  className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-white/30 hover:bg-white/10 transition-colors"
+                                >Cancel</button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setConfirmDeleteFileId(file.id)}
+                                disabled={isDeleting}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity w-6 h-6 rounded-md bg-red-500/10 hover:bg-red-500/30 flex items-center justify-center"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-3 h-3 text-red-400" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </motion.div>
+          ) : loading ? (
             <div className="flex items-center justify-center p-40">
               <div className="w-10 h-10 border-4 border-neon-purple border-t-transparent rounded-full animate-spin" />
             </div>
@@ -386,11 +589,14 @@ export default function AdminDashboard() {
                         </div>
                         <div className="space-y-2">
                            <label className="text-xs uppercase text-white/30 ml-2">Member Photo</label>
-                           <div className="relative group">
-                              <Input type="file" accept="image/*" className="cursor-pointer h-14 pt-3.5 bg-white/5 border-white/10" onChange={e => handleFileUpload(e, 'new', 'image')} />
-                              <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5" />
+                           <div 
+                             onClick={() => { setPickerTarget({ target: 'new', field: 'image' }); setPickerOpen(true); }}
+                             className="relative group h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer flex items-center px-6 hover:border-white/20 transition-colors"
+                           >
+                             <span className="text-white/50">{newItem.image ? 'Change Media...' : 'Choose Media...'}</span>
+                             <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5 group-hover:text-neon-purple transition-colors" />
                            </div>
-                           {newItem.image && <p className="text-[10px] text-green-400 ml-2 truncate">Uploaded: {newItem.image}</p>}
+                           {newItem.image && <p className="text-[10px] text-green-400 ml-2 truncate">Selected: {newItem.image}</p>}
                         </div>
                         <div className="space-y-3 md:col-span-2 mt-4">
                           <label className="text-xs uppercase text-white/30 ml-2">Social & Professional Links</label>
@@ -419,10 +625,14 @@ export default function AdminDashboard() {
                         </div>
                         <div className="space-y-2">
                            <label className="text-xs uppercase text-white/30 ml-2">Event Poster</label>
-                           <div className="relative group">
-                             <Input type="file" accept="image/*" className="cursor-pointer h-14 pt-3.5 bg-white/5 border-white/10" onChange={e => handleFileUpload(e, 'new', 'image')} />
-                             <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5" />
+                           <div 
+                             onClick={() => { setPickerTarget({ target: 'new', field: 'image' }); setPickerOpen(true); }}
+                             className="relative group h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer flex items-center px-6 hover:border-white/20 transition-colors"
+                           >
+                             <span className="text-white/50">{newItem.image ? 'Change Media...' : 'Choose Media...'}</span>
+                             <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5 group-hover:text-neon-purple transition-colors" />
                            </div>
+                           {newItem.image && <p className="text-[10px] text-green-400 ml-2 truncate">Selected: {newItem.image}</p>}
                         </div>
                         <div className="space-y-2 md:col-span-2">
                           <label className="text-xs uppercase text-white/30 ml-2">Description</label>
@@ -442,10 +652,14 @@ export default function AdminDashboard() {
                         </div>
                         <div className="space-y-2 md:col-span-2">
                            <label className="text-xs uppercase text-white/30 ml-2">Gallery Image</label>
-                           <div className="relative group">
-                             <Input type="file" accept="image/*" className="cursor-pointer h-14 pt-3.5 bg-white/5 border-white/10" onChange={e => handleFileUpload(e, 'new', 'url')} />
-                             <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5" />
+                           <div 
+                             onClick={() => { setPickerTarget({ target: 'new', field: 'url' }); setPickerOpen(true); }}
+                             className="relative group h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer flex items-center px-6 hover:border-white/20 transition-colors"
+                           >
+                             <span className="text-white/50">{newItem.url ? 'Change Media...' : 'Choose Media...'}</span>
+                             <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5 group-hover:text-neon-purple transition-colors" />
                            </div>
+                           {newItem.url && <p className="text-[10px] text-green-400 ml-2 truncate">Selected: {newItem.url}</p>}
                         </div>
                       </>
                     )}
@@ -540,12 +754,36 @@ export default function AdminDashboard() {
                               <React.Fragment key={year}>
                                 <TableRow className="bg-white/5 hover:bg-white/5 border-none">
                                   <TableCell colSpan={5} className="py-8 px-10">
-                                    <div className="flex items-center gap-6">
-                                      <div className="w-2 h-10 bg-linear-to-b from-neon-purple to-neon-blue rounded-full shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
-                                      <div>
-                                        <span className="text-2xl font-mono uppercase tracking-[0.2em] text-white block">{year} Leads</span>
-                                        <span className="text-[10px] uppercase text-white/20 tracking-widest mt-1 block">Leadership & Coordination Team</span>
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-6">
+                                        <div className="w-2 h-10 bg-linear-to-b from-neon-purple to-neon-blue rounded-full shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
+                                        <div>
+                                          <span className="text-2xl font-mono uppercase tracking-[0.2em] text-white block">{year} Leads</span>
+                                          <span className="text-[10px] uppercase text-white/20 tracking-widest mt-1 block">Leadership & Coordination Team</span>
+                                        </div>
                                       </div>
+                                      
+                                      {(() => {
+                                        const isShown = groups[year].some((item: any) => item.show_first);
+                                        return (
+                                          <div className="flex items-center gap-3">
+                                            <span className="text-xs uppercase text-white/40 tracking-wider">Show on About Page</span>
+                                            <button
+                                              onClick={() => toggleYearShowFirst(year, isShown)}
+                                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                                isShown ? 'bg-neon-purple' : 'bg-white/10'
+                                              }`}
+                                              title={isShown ? "Currently shown on About page" : "Show this year's leads on About page"}
+                                            >
+                                              <span
+                                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                                  isShown ? 'translate-x-6' : 'translate-x-1'
+                                                }`}
+                                              />
+                                            </button>
+                                          </div>
+                                        );
+                                      })()}
                                     </div>
                                   </TableCell>
                                 </TableRow>
@@ -793,9 +1031,12 @@ export default function AdminDashboard() {
                   </div>
                   <div className="space-y-2">
                      <label className="text-xs uppercase text-white/30 ml-2">Update Photo</label>
-                     <div className="relative group">
-                        <Input type="file" accept="image/*" className="cursor-pointer h-14 pt-3.5 bg-white/5 border-white/10" onChange={e => handleFileUpload(e, 'edit', 'image')} />
-                        <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5" />
+                     <div 
+                       onClick={() => { setPickerTarget({ target: 'edit', field: 'image' }); setPickerOpen(true); }}
+                       className="relative group h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer flex items-center px-6 hover:border-white/20 transition-colors"
+                     >
+                       <span className="text-white/50">Change Media...</span>
+                       <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5 group-hover:text-neon-purple transition-colors" />
                      </div>
                    </div>
                    <div className="space-y-3 md:col-span-2">
@@ -821,7 +1062,13 @@ export default function AdminDashboard() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs uppercase text-white/30 ml-2">Update Poster</label>
-                    <Input type="file" accept="image/*" className="h-14 pt-3.5 bg-white/5 border-white/10" onChange={e => handleFileUpload(e, 'edit', 'image')} />
+                    <div 
+                      onClick={() => { setPickerTarget({ target: 'edit', field: 'image' }); setPickerOpen(true); }}
+                      className="relative group h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer flex items-center px-6 hover:border-white/20 transition-colors"
+                    >
+                      <span className="text-white/50">Change Media...</span>
+                      <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5 group-hover:text-neon-purple transition-colors" />
+                    </div>
                   </div>
                   <div className="md:col-span-2 space-y-2">
                     <label className="text-xs uppercase text-white/30 ml-2">Google Drive Link</label>
@@ -845,7 +1092,13 @@ export default function AdminDashboard() {
                   </div>
                   <div className="md:col-span-2 space-y-2">
                     <label className="text-xs uppercase text-white/30 ml-2">Replace Image</label>
-                    <Input type="file" accept="image/*" className="h-14 pt-3.5 bg-white/5 border-white/10" onChange={e => handleFileUpload(e, 'edit', 'url')} />
+                    <div 
+                      onClick={() => { setPickerTarget({ target: 'edit', field: 'url' }); setPickerOpen(true); }}
+                      className="relative group h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer flex items-center px-6 hover:border-white/20 transition-colors"
+                    >
+                      <span className="text-white/50">Change Media...</span>
+                      <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5 group-hover:text-neon-purple transition-colors" />
+                    </div>
                   </div>
                 </>
               )}
@@ -876,6 +1129,57 @@ export default function AdminDashboard() {
           )}
         </DialogContent>
       </Dialog>
+
+      <StorageBrowser open={showUploads} onClose={() => setShowUploads(false)} />
+
+      <MediaPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(url) => {
+          if (!pickerTarget) return;
+          if (pickerTarget.target === 'new') {
+            setNewItem({ ...newItem, [pickerTarget.field]: url });
+          } else {
+            setEditingItem({ ...editingItem, [pickerTarget.field]: url });
+          }
+        }}
+      />
+
+      {/* Preview lightbox for Uploads tab */}
+      {ReactDOM.createPortal(
+        <AnimatePresence>
+          {previewFile && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ position: 'fixed', inset: 0, zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px', background: 'rgba(0,0,0,0.92)' }}
+              onClick={() => setPreviewFile(null)}
+            >
+              <button
+                onClick={() => setPreviewFile(null)}
+                className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-colors z-10"
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+                onClick={(e) => e.stopPropagation()}
+                className="max-w-4xl w-full"
+              >
+                {previewFile.mime.startsWith('image/') ? (
+                  <img src={previewFile.url} className="w-full max-h-[80vh] object-contain rounded-2xl" />
+                ) : (
+                  <video src={previewFile.url} controls autoPlay className="w-full max-h-[80vh] rounded-2xl" />
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 }

@@ -59,8 +59,8 @@ export default function Gallery() {
                         className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-1000"
                         referrerPolicy="no-referrer"
                       />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
-                        <p className="text-white font-sans  text-2xl uppercase tracking-tighter mb-2 line-clamp-2">
+                      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8 z-10">
+                        <p className="text-white font-sans text-2xl uppercase tracking-tighter mb-2 line-clamp-2">
                           {image.caption}
                         </p>
                         <div className="flex items-center gap-2 text-neon-purple text-xs uppercase tracking-widest">
@@ -68,8 +68,17 @@ export default function Gallery() {
                         </div>
                       </div>
 
+                      {/* Photo Credit Badge */}
+                      {image.taken_by && (
+                        <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 z-20 transition-opacity duration-300">
+                          <span className="text-white/60 text-[9px] uppercase tracking-widest font-bold">
+                            PC {image.taken_by}
+                          </span>
+                        </div>
+                      )}
+
                       {/* Subtle glow on hover */}
-                      <div className="absolute inset-0 border-2 border-neon-purple/0 group-hover:border-neon-purple/30 transition-colors duration-500 rounded-[32px] pointer-events-none" />
+                      <div className="absolute inset-0 border-2 border-neon-purple/0 group-hover:border-neon-purple/30 transition-colors duration-500 rounded-[32px] pointer-events-none z-30" />
                     </div>
                   </TiltCard>
                 </motion.div>

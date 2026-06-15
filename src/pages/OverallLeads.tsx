@@ -7,14 +7,35 @@ import { Linkedin, Globe, Instagram, Users, Clock } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function OverallLeads() {
-  const [activeYear, setActiveYear] = useState("2025–26");
+  const [activeYear, setActiveYear] = useState("");
   const [leads, setLeads] = useState<any[]>([]);
-  const [years, setYears] = useState<string[]>(["2025–26", "2024–25", "2023–24"]);
+  const [years, setYears] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchLeads();
+    fetchYears();
+  }, []);
+
+  useEffect(() => {
+    if (activeYear) {
+      fetchLeads();
+    }
   }, [activeYear]);
+
+  const fetchYears = async () => {
+    const { data, error } = await supabase
+      .from("club_leads")
+      .select("year");
+    
+    if (!error && data) {
+      const uniqueYears = Array.from(new Set(data.map((item: any) => item.year))).filter(Boolean) as string[];
+      uniqueYears.sort((a, b) => b.localeCompare(a));
+      setYears(uniqueYears);
+      if (uniqueYears.length > 0) {
+        setActiveYear(uniqueYears[0]);
+      }
+    }
+  };
 
   const fetchLeads = async () => {
     setLoading(true);
