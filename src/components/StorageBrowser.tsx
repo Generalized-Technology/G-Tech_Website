@@ -135,10 +135,10 @@ export function StorageBrowser({ open, onClose }: StorageBrowserProps) {
             <div className="absolute -inset-1 rounded-[34px] bg-neon-purple/10 blur-2xl -z-10 pointer-events-none" />
 
             {/* Header */}
-            <div className="flex items-center justify-between px-8 py-6 border-b border-white/10 flex-shrink-0">
+            <div className="flex items-center justify-between px-8 py-6 border-b border-white/10 shrink-0">
               <div>
                 <div className="flex items-center gap-3">
-                  <div className="w-2 h-7 bg-gradient-to-b from-neon-purple to-neon-blue rounded-full shadow-[0_0_12px_rgba(168,85,247,0.6)]" />
+                  <div className="w-2 h-7 bg-linear-to-b from-neon-purple to-neon-blue rounded-full shadow-[0_0_12px_rgba(168,85,247,0.6)]" />
                   <h2 className="text-2xl font-display uppercase tracking-widest">Storage Uploads</h2>
                 </div>
                 <p className="text-white/30 text-xs mt-1 ml-5">

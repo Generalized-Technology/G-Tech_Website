@@ -7,11 +7,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
+  { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Events", href: "/events" },
   { name: "Gallery", href: "/gallery" },
   { name: "Tools", href: "/tools" },
-  { name: "Support", href: "/support" },
+  // { name: "Support", href: "/support" },
 ];
 
 export function Navbar() {
@@ -39,10 +40,10 @@ export function Navbar() {
         isScrolled ? "py-3 lg:py-4 glass-dark border-b border-neon-purple/20 shadow-[0_4px_30px_rgba(0,0,0,1)]" : "py-5 lg:py-8 bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 lg:px-6 flex items-center justify-between">
+      <div className="max-w-[90%] mx-auto px-4 lg:px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
           <div className="max-h-[70px] flex items-center justify-center">
-            <img className="max-h-[60px] md:max-h-[70px] max-w-[180px] md:max-w-none object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]" src="/images/navbarlogo.svg" alt="logo" />
+            <img className="max-h-[50px] md:max-h-[60px]  object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]" src="/images/navbarlogo.svg" alt="logo" />
           </div>
         </Link>
 

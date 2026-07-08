@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { GlassCard, SectionHeader } from "@/components/UIElements";
 
 export default function QRCodeGenerator() {
-  const [text, setText] = useState("https://gtech.club");
+  const [text, setText] = useState("https://generalizedtechnology.vercel.app/");
   const [fgColor, setFgColor] = useState("#a855f7");
   const [size, setSize] = useState(256);
   const qrRef = useRef<SVGSVGElement>(null);

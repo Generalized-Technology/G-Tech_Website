@@ -92,17 +92,17 @@ export default function Gallery() {
         open={!!selectedImage}
         onOpenChange={() => setSelectedImage(null)}
       >
-        <DialogContent className="max-w-6xl p-0 bg-transparent border-none overflow-hidden flex items-center justify-center">
+        <DialogContent className="max-w-[95vw] sm:max-w-[90vw] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex items-center justify-center shadow-none">
           {selectedImage && (
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="relative p-4"
+              className="relative w-full h-full flex items-center justify-center p-2 md:p-6"
             >
               <img
                 src={selectedImage}
                 alt="Gallery Preview"
-                className="max-w-full max-h-[85vh] object-contain rounded-3xl shadow-[0_0_100px_rgba(168,85,247,0.3)] border border-white/10"
+                className="max-w-full max-h-full object-contain rounded-2xl shadow-[0_0_100px_rgba(168,85,247,0.4)] border border-white/10"
                 referrerPolicy="no-referrer"
               />
             </motion.div>

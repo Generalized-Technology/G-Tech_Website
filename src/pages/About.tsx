@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { SectionHeader, GlassCard, TiltCard } from "@/components/UIElements";
 import { Linkedin, Globe, Instagram, ArrowRight, History } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -10,6 +10,23 @@ export default function About() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const [leadership, setLeadership] = useState<any[]>([]);
+
+  const backgroundImages = [
+    "/images/bgi/img0.jpeg",
+    "/images/bgi/img1.jpg",
+    "/images/bgi/img2.jpg",
+    "/images/bgi/img3.jpg",
+    "/images/bgi/img4.jpg",
+    "/images/bgi/img5.jpg",
+  ];
+  const [currentBg, setCurrentBg] = useState(0);
+
+  useEffect(() => {
+    const bgInterval = setInterval(() => {
+      setCurrentBg((prev) => (prev + 1) % backgroundImages.length);
+    }, 5000);
+    return () => clearInterval(bgInterval);
+  }, []);
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -26,74 +43,84 @@ export default function About() {
   }, []);
 
   return (
-    <main className="pt-32 pb-20 bg-mesh">
+    <main className="pb-30 bg-mesh">
       {/* About Section */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="relative overflow-hidden min-h-screen flex items-center pt-32 pb-20">
+        {/* Background Image Carousel with Gradient Overlay */}
+        <div className="absolute inset-0 z-0 overflow-hidden bg-[#050510]">
+          <AnimatePresence>
+            <motion.img
+              key={currentBg}
+              src={backgroundImages[currentBg]}
+              alt="team background"
+              className="w-full h-full object-cover opacity-40 absolute top-0 left-0"
+              initial={{ opacity: 0, scale: 1.0 }}
+              animate={{ opacity: 1, scale: 1.1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                opacity: { duration: 1.5 },
+                scale: { duration: 10, ease: "linear" },
+              }}
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-linear-to-t from-[#050510] via-[#050510]/60 to-[#050510]/10 pointer-events-none" />
+        </div>
+
         <motion.div
           style={{ y }}
           className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-purple/10 blur-[150px] -z-10"
         />
 
-        <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <SectionHeader
-              align="left"
-              title="About G-Tech Club"
-              subtitle="The driving force of technical innovation and creative excellence at Guru Nanak College."
-            />
-            <div className="space-y-6 text-white/70 text-lg leading-relaxed">
-              <p>
-                G-Tech Club is a community of passionate technologists,
-                creators, and problem solvers. We serve as the backbone for all
-                technical and media requirements of Guru Nanak College.
-              </p>
-              <p>
-                From capturing the most memorable moments of college life to
-                building complex digital platforms, our six specialized domains
-                work in harmony to deliver professional-grade results.
-              </p>
-              <p>
-                Our mission is to foster a culture of learning by doing,
-                providing students with real-world experience in media
-                production, software development, and event management.
-              </p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <TiltCard>
-              <div className="aspect-square rounded-[40px] overflow-hidden glass border border-white/10 p-4">
-                <div className="w-full h-full rounded-[32px] bg-linear-to-br from-neon-purple/20 to-neon-blue/20 flex items-center justify-center relative overflow-hidden">
-                  {/* Abstract 3D-ish elements */}
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="absolute w-[150%] h-[150%] border border-white/5 rounded-full"
-                  />
-                  <img
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 relative z-10 text-center"
-                    src="/images/gt-logo.jpg"
-                    alt="team image"
-                  />
-                </div>
-              </div>
-            </TiltCard>
-          </motion.div>
+        <div className="absolute bottom-12 left-0 right-0 px-6 z-10 w-full">
+          <div className="container mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="max-w-5xl mx-auto text-center"
+            >
+              <h2 className="text-3xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-linear-to-r from-white via-white to-white/70 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)] neon-text">
+                Generalized Technology
+              </h2>
+              <h2 className="text-xl md:text-3xl font-display font-bold text-transparent bg-clip-text bg-linear-to-r from-white via-white to-white/70 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)] neon-text">
+                "Dream big, work hard, and never give up. Your future is bright!"
+              </h2>
+            </motion.div>
+          </div>
         </div>
       </section>
+
+      <div className="container mx-auto px-6 max-w-[75%] py-10">
+        <SectionHeader
+          align="center"
+          title="About G-Tech Club"
+          subtitle="The driving force of technical innovation and creative excellence at Guru Nanak College."
+        />
+        <div className="space-y-6 text-white/90 text-lg leading-relaxed mt-6">
+          <p>
+            G-Tech Club is the <b className="text-neon-purple">official technical team of Guru Nanak College</b>,
+            proudly partnering with the <b className="text-neon-purple">Guru Nanak Media Centre (GNMC)</b> and
+            functioning under the <b className="text-neon-purple">Fine Arts Association</b>. We serve as the
+            college's central technical and creative team, supporting events,
+            initiatives, and digital transformation across the campus.
+          </p>
+
+          <p>
+            From capturing the most memorable moments of college life to
+            developing modern websites, applications, and digital solutions, our
+            specialized domains work together to deliver professional-quality
+            media, technology, and event support for the institution.
+          </p>
+
+          <p>
+            Our mission is to empower students through hands-on learning,
+            innovation, and collaboration by providing real-world experience in
+            media production, software development, design, photography,
+            videography, and technical event management while contributing to
+            the growth of Guru Nanak College.
+          </p>
+        </div>
+      </div>
 
       {/* Leads Section */}
       <section className="py-32 relative">

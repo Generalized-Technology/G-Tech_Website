@@ -49,7 +49,7 @@ export function Hero() {
             transition={{ delay: 0.4 }}
             className="text-white/70 text-lg md:text-xl lg:text-xl max-w-xl mb-10 lg:mb-8 leading-relaxed mx-auto lg:mx-0"
           >
-            Empowering the next generation of creators, developers, and tech enthusiasts at Guru Nanak College.
+            Next generation of creators, developers, and tech enthusiasts at Guru Nanak College.
           </motion.p>
 
           {/* Stats/Badges */}

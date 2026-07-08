@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { JoinUsModal } from "./components/JoinUsModal";
@@ -20,6 +20,8 @@ import QRCodeGenerator from "./pages/tools/QRCodeGenerator";
 import ImageToPDF from "./pages/tools/ImageToPDF";
 import ImageConverter from "./pages/tools/ImageConverter";
 import Whiteboard from "./pages/tools/Whiteboard";
+import ComingSoon from "./pages/ComingSoon";
+import Form from "./pages/Form";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -35,32 +37,40 @@ import AdminDashboard from "./pages/admin/Dashboard";
 function Layout() {
   const { pathname } = useLocation();
   const isAdmin = pathname.startsWith("/admin") || pathname === "/login";
+  const isForm = pathname.startsWith("/form");
+  const hideNavAndFooter = isAdmin || isForm;
 
   return (
     <div className="min-h-screen flex flex-col">
-      {!isAdmin && <Navbar />}
+      {!hideNavAndFooter && <Navbar />}
       
       <div className="grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/events" element={<Events />} />
+          {/* <Route path="/events" element={<Events />} /> */}
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/support" element={<Support />} />
+          <Route path="/events" element={<ComingSoon />} />
+          {/* <Route path="/gallery" element={<ComingSoon />} /> */}
+          {/* <Route path="/support" element={<Support />} /> */}
+          <Route path="/support" element={<ComingSoon />} />
           <Route path="/overall-leads" element={<OverallLeads />} />
-          <Route path="/join" element={<Join />} />
+          {/* <Route path="/join" element={<Join />} /> */}
+          <Route path="/join" element={<Navigate to="/form?id=RZiwTHUqyBX17Xvw7" replace={true} />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/tools/qr-generator" element={<QRCodeGenerator />} />
           <Route path="/tools/image-to-pdf" element={<ImageToPDF />} />
           <Route path="/tools/image-converter" element={<ImageConverter />} />
           <Route path="/tools/whiteboard" element={<Whiteboard />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
+          <Route path="/form" element={<Form />} />
           
           <Route path="/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </div>
 
-      {!isAdmin && <Footer />}
+      {!hideNavAndFooter && <Footer />}
     </div>
   );
 }

@@ -54,7 +54,7 @@ export function Footer() {
             © 2025 G-Tech Club. Engineered for the Future.
           </p>
           <p className="text-white/20 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-            Crafted with <span className="text-neon-purple animate-pulse">✦</span> by G-Tech Web Team
+            Crafted with <span className="text-neon-purple animate-pulse">❤︎⁠</span> by G-Tech Web Team
           </p>
         </div>
       </div>
