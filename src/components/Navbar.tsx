@@ -11,6 +11,7 @@ const navLinks = [
   { name: "About", href: "/about" },
   { name: "Events", href: "/events" },
   { name: "Gallery", href: "/gallery" },
+  { name: "Rulebook", href: "/rulebook" },
   { name: "Tools", href: "/tools" },
   // { name: "Support", href: "/support" },
 ];
@@ -123,7 +124,7 @@ export function Navbar() {
                       "w-full btn-primary py-8 rounded-2xl text-xl uppercase tracking-widest flex items-center justify-center"
                     )}
                   >
-                    Join the Community
+                    Join Us
                   </Link>
                 </div>
               </div>

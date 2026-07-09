@@ -22,6 +22,7 @@ import ImageConverter from "./pages/tools/ImageConverter";
 import Whiteboard from "./pages/tools/Whiteboard";
 import ComingSoon from "./pages/ComingSoon";
 import Form from "./pages/Form";
+import Rulebook from "./pages/Rulebook";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -38,7 +39,8 @@ function Layout() {
   const { pathname } = useLocation();
   const isAdmin = pathname.startsWith("/admin") || pathname === "/login";
   const isForm = pathname.startsWith("/form");
-  const hideNavAndFooter = isAdmin || isForm;
+  const isRulebook = pathname.startsWith("/rulebook");
+  const hideNavAndFooter = isAdmin || isForm || isRulebook;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -64,6 +66,7 @@ function Layout() {
           <Route path="/tools/whiteboard" element={<Whiteboard />} />
           <Route path="/coming-soon" element={<ComingSoon />} />
           <Route path="/form" element={<Form />} />
+          <Route path="/rulebook" element={<Rulebook />} />
           
           <Route path="/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
