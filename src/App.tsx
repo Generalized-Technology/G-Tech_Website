@@ -43,8 +43,8 @@ function Layout() {
   const isAdmin = pathname.startsWith("/admin") || pathname === "/login";
   const isForm = pathname.startsWith("/form");
   const isRulebook = pathname.startsWith("/rulebook");
-  const isWhiteboard = pathname.startsWith("/tools/whiteboard");
-  const hideNavAndFooter = isAdmin || isForm || isRulebook || isWhiteboard;
+  const isToolDetail = pathname.startsWith("/tools/");
+  const hideNavAndFooter = isAdmin || isForm || isRulebook || isToolDetail;
 
   return (
     <div className="min-h-screen flex flex-col">

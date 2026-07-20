@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, ChangeEvent, DragEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { SectionHeader, GlassCard } from "@/components/UIElements";
+import { GlassCard } from "@/components/UIElements";
 import {
   Upload,
   Crop,
@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import JSZip from "jszip";
+import { ToolHeader } from "@/components/ToolHeader";
 
 export default function InstagramCarousel() {
   const [file, setFile] = useState<File | null>(null);
@@ -215,14 +216,10 @@ export default function InstagramCarousel() {
   const isWiderThanCrop = imgRatio >= R_total;
 
   return (
-    <main className="pt-32 pb-20 bg-mesh min-h-screen">
-      <section className="py-20 px-6">
+    <main className="min-h-screen bg-mesh pb-20 pt-16">
+      <ToolHeader title="Instagram Carousel Slicer" />
+      <section className="px-6 py-12">
         <div className="container mx-auto max-w-5xl">
-          <SectionHeader
-            title="Instagram Carousel Slicer"
-            subtitle="Split your panoramic photos into seamless, continuous carousel slides. Select square (1:1) or portrait (4:5) ratios."
-          />
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
             {/* Left Workspace Panel */}
             <div className="lg:col-span-2 space-y-8">

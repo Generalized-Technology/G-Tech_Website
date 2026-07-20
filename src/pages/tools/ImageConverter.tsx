@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { FileUp, RefreshCw, Download, ArrowLeft, Image as ImageIcon, CheckCircle2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { FileUp, RefreshCw, Download, Image as ImageIcon, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -10,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { GlassCard, SectionHeader } from "@/components/UIElements";
+import { GlassCard } from "@/components/UIElements";
+import { ToolHeader } from "@/components/ToolHeader";
 
 type Format = "png" | "jpeg" | "webp" | "gif";
 
@@ -59,20 +59,10 @@ export default function ImageConverter() {
   };
 
   return (
-    <main className="pt-32 pb-20 bg-mesh min-h-screen">
-      <div className="container mx-auto px-6">
-        <Link to="/tools" className="inline-flex items-center gap-2 text-white/50 hover:text-neon-purple transition-colors mb-12 group">
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          Back to Tools
-        </Link>
-
-        <SectionHeader 
-          title="Image"
-          subtitle="Transform images between PNG, JPEG, WEBP and GIF formats with adjustable quality."
-          gradient="Converter"
-        />
-
-        <div className="max-w-5xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <main className="min-h-screen bg-mesh pb-20 pt-16">
+      <ToolHeader title="Image Converter" />
+      <div className="container mx-auto px-6 py-12">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 lg:grid-cols-2">
           {/* Work Area */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}

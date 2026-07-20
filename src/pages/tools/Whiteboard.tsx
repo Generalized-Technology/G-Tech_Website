@@ -285,6 +285,9 @@ export default function Whiteboard() {
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
           <span className="text-sm font-medium uppercase tracking-wider hidden sm:block">Back to Tools</span>
         </Link>
+        <h1 className="mr-auto border-l border-white/10 pl-4 text-sm font-semibold uppercase tracking-wider text-white sm:pl-5">
+          Whiteboard
+        </h1>
 
         {/* Center: Board Color + Undo/Redo */}
         <div className="flex items-center gap-3 flex-1 justify-center">

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, ChangeEvent, DragEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { SectionHeader, GlassCard } from "@/components/UIElements";
+import { GlassCard } from "@/components/UIElements";
 import {
   Upload,
   Video,
@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { ToolHeader } from "@/components/ToolHeader";
 
 export default function VideoCompressor() {
   const [file, setFile] = useState<File | null>(null);
@@ -205,14 +206,10 @@ export default function VideoCompressor() {
   }, [videoSrc]);
 
   return (
-    <main className="pt-32 pb-20 bg-mesh min-h-screen">
-      <section className="py-20 px-6">
+    <main className="min-h-screen bg-mesh pb-20 pt-16">
+      <ToolHeader title="Video Compressor" />
+      <section className="px-6 py-12">
         <div className="container mx-auto max-w-4xl">
-          <SectionHeader
-            title="Video Compressor"
-            subtitle="Reduce video file sizes directly in your browser. No server uploads. 100% private."
-          />
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             {/* Left/Main Column */}
             <div className="md:col-span-2 space-y-8">

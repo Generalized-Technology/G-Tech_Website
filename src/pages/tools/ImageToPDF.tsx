@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { jsPDF } from "jspdf";
-import { FileUp, FileType, Trash2, Download, ArrowLeft, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { FileUp, FileType, Trash2, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { GlassCard, SectionHeader } from "@/components/UIElements";
+import { GlassCard } from "@/components/UIElements";
+import { ToolHeader } from "@/components/ToolHeader";
 
 interface ImageFile {
   file: File;
@@ -73,20 +73,10 @@ export default function ImageToPDF() {
   };
 
   return (
-    <main className="pt-32 pb-20 bg-mesh min-h-screen">
-      <div className="container mx-auto px-6">
-        <Link to="/tools" className="inline-flex items-center gap-2 text-white/50 hover:text-neon-purple transition-colors mb-12 group">
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          Back to Tools
-        </Link>
-
-        <SectionHeader 
-          title="Image To"
-          subtitle="Convert multiple images into a professional PDF document in seconds."
-          gradient="PDF"
-        />
-
-        <div className="max-w-4xl mx-auto mt-12 space-y-8">
+    <main className="min-h-screen bg-mesh pb-20 pt-16">
+      <ToolHeader title="Image to PDF" />
+      <div className="container mx-auto px-6 py-12">
+        <div className="mx-auto max-w-4xl space-y-8">
           {/* Dropzone */}
           <div className="relative group">
             <input 

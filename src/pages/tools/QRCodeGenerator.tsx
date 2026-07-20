@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
 import { motion } from "motion/react";
 import { QRCodeSVG } from "qrcode.react";
-import { Download, Share2, ArrowLeft, RefreshCw } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Download, Share2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { GlassCard, SectionHeader } from "@/components/UIElements";
+import { GlassCard } from "@/components/UIElements";
+import { ToolHeader } from "@/components/ToolHeader";
 
 export default function QRCodeGenerator() {
   const [text, setText] = useState("https://generalizedtechnology.vercel.app/");
@@ -34,20 +34,10 @@ export default function QRCodeGenerator() {
   };
 
   return (
-    <main className="pt-32 pb-20 bg-mesh min-h-screen">
-      <div className="container mx-auto px-6">
-        <Link to="/tools" className="inline-flex items-center gap-2 text-white/50 hover:text-neon-purple transition-colors mb-12 group">
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          Back to Tools
-        </Link>
-
-        <SectionHeader 
-          title="QR Code"
-          subtitle="Generate high-quality, custom QR codes for links, text, or contacts instantly."
-          gradient="Generator"
-        />
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
+    <main className="min-h-screen bg-mesh pb-20 pt-16">
+      <ToolHeader title="QR Code Generator" />
+      <div className="container mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           {/* Controls */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}

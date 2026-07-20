@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft,
   Download,
   Music,
   Video,
@@ -14,10 +13,10 @@ import {
   RefreshCw,
   Scissors,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { GlassCard, SectionHeader } from "@/components/UIElements";
+import { GlassCard } from "@/components/UIElements";
+import { ToolHeader } from "@/components/ToolHeader";
 
 export type DownloadMode = "video" | "audio";
 
@@ -215,29 +214,16 @@ export default function VideoDownloader() {
   };
 
   return (
-    <main className="pt-32 pb-20 bg-mesh min-h-screen">
-      <div className="container mx-auto px-6">
-        <Link
-          to="/tools"
-          className="inline-flex items-center gap-2 text-white/50 hover:text-neon-purple transition-colors mb-12 group"
-        >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          Back to Tools
-        </Link>
-
-        <SectionHeader
-          title="Video Downloader"
-          subtitle="Download videos or extract BGM/audio from YouTube & Instagram — perfect for video editors grabbing assets fast."
-          gradient="Downloader"
-        />
-
+    <main className="min-h-screen bg-mesh pb-20 pt-16">
+      <ToolHeader title="Video Downloader" />
+      <div className="container mx-auto px-6 py-12">
         {/* Platform Badges */}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex items-center justify-center gap-4 mt-6 mb-12"
+          className="mb-12 flex items-center justify-center gap-4"
         >
           <div className="flex items-center gap-2 glass px-4 py-2 rounded-full border border-white/10">
             <Youtube className="w-4 h-4 text-red-400" />
