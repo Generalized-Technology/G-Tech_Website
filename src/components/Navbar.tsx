@@ -37,14 +37,15 @@ export function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
+      style={isScrolled ? { backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" } : {}}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? "py-3 lg:py-4 glass-dark border-b border-neon-purple/20 shadow-[0_4px_30px_rgba(0,0,0,1)]" : "py-5 lg:py-8 bg-transparent"
+        isScrolled ? "py-3 lg:py-4 bg-black/60 border-b border-neon-purple/20 shadow-[0_4px_30px_rgba(0,0,0,1)]" : "py-5 lg:py-8 bg-transparent"
       }`}
     >
       <div className="max-w-[90%] mx-auto px-4 lg:px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="max-h-[70px] flex items-center justify-center">
-            <img className="max-h-[50px] md:max-h-[60px]  object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]" src="/images/navbarlogo.svg" alt="logo" />
+          <div className="max-h-17.5 flex items-center justify-center">
+            <img className="max-h-12.5 md:max-h-15  object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]" src="/images/navbarlogo.svg" alt="logo" />
           </div>
         </Link>
 
@@ -62,7 +63,7 @@ export function Navbar() {
               {location.pathname === link.href && (
                 <motion.div
                   layoutId="nav-underline"
-                  className="absolute -bottom-2 left-0 right-0 h-[2px] bg-neon-purple shadow-[0_0_15px_rgba(168,85,247,0.8)]"
+                  className="absolute -bottom-2 left-0 right-0 h-0.5 bg-neon-purple shadow-[0_0_15px_rgba(168,85,247,0.8)]"
                 />
               )}
             </Link>
@@ -91,7 +92,7 @@ export function Navbar() {
                   <Menu className="w-6 h-6" />
                 </button>
             </SheetTrigger>
-            <SheetContent side="right" className="glass-dark border-l border-white/10 text-white w-full sm:w-[400px] p-0">
+            <SheetContent side="right" className="glass-dark border-l border-white/10 text-white w-full sm:w-100 p-0">
               <div className="flex flex-col h-full p-12 bg-mesh">
                 <div className="flex flex-col gap-6 mt-10">
                   {navLinks.map((link, i) => (

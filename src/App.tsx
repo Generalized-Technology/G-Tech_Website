@@ -34,13 +34,17 @@ function ScrollToTop() {
 
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
+import VideoDownloader from "./pages/tools/VideoDownloader";
+import VideoCompressor from "./pages/tools/VideoCompressor";
+import InstagramCarousel from "./pages/tools/InstagramCarousel";
 
 function Layout() {
   const { pathname } = useLocation();
   const isAdmin = pathname.startsWith("/admin") || pathname === "/login";
   const isForm = pathname.startsWith("/form");
   const isRulebook = pathname.startsWith("/rulebook");
-  const hideNavAndFooter = isAdmin || isForm || isRulebook;
+  const isWhiteboard = pathname.startsWith("/tools/whiteboard");
+  const hideNavAndFooter = isAdmin || isForm || isRulebook || isWhiteboard;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -70,6 +74,9 @@ function Layout() {
           
           <Route path="/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/tools/video-downloader" element={<VideoDownloader />} />
+          <Route path="/tools/video-compressor" element={<VideoCompressor />} />
+          <Route path="/tools/instagram-carousel" element={<InstagramCarousel />} />
         </Routes>
       </div>
 
@@ -79,6 +86,30 @@ function Layout() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'IMG' || target.tagName === 'VIDEO') {
+        e.preventDefault();
+      }
+    };
+
+    const handleDragStart = (e: DragEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'IMG' || target.tagName === 'VIDEO') {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('dragstart', handleDragStart);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('dragstart', handleDragStart);
+    };
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />

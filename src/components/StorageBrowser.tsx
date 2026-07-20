@@ -298,7 +298,7 @@ export function StorageBrowser({ open, onClose }: StorageBrowserProps) {
                   {previewMime.startsWith("image/") ? (
                     <img src={previewUrl} className="w-full max-h-[80vh] object-contain rounded-2xl" />
                   ) : (
-                    <video src={previewUrl} controls autoPlay className="w-full max-h-[80vh] rounded-2xl" />
+                    <video src={previewUrl} controls controlsList="nodownload" autoPlay className="w-full max-h-[80vh] rounded-2xl" />
                   )}
                 </motion.div>
               </motion.div>

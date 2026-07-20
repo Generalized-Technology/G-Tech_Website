@@ -49,7 +49,7 @@ export function Hero() {
             transition={{ delay: 0.4 }}
             className="text-white/70 text-lg md:text-xl lg:text-xl max-w-xl mb-10 lg:mb-8 leading-relaxed mx-auto lg:mx-0"
           >
-            Next generation of creators, developers, and tech enthusiasts at Guru Nanak College.
+            The Next Generation of Creators, Developers, and Tech Enthusiasts at Guru Nanak College.
           </motion.p>
 
           {/* Stats/Badges */}
@@ -105,7 +105,7 @@ export function Hero() {
           style={{ y: y1 }}
           className="relative order-1 lg:order-2 mt-12 lg:mt-0 flex items-center justify-center"
         >
-          <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-[500px] lg:h-[500px] flex items-center justify-center">
+          <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-125 lg:h-125 flex items-center justify-center">
             {/* Outer Rings */}
             <motion.div
               style={{ rotate }}
@@ -149,7 +149,7 @@ export function Hero() {
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-[-20px] lg:inset-[-40px] pointer-events-none"
+                    className="absolute -inset-5 lg:-inset-10 pointer-events-none"
                   >
                     <motion.div
                       animate={{ rotate: -360 }}
@@ -163,7 +163,7 @@ export function Hero() {
                   <motion.div
                     animate={{ rotate: -360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-[-40px] lg:inset-[-80px] pointer-events-none"
+                    className="absolute -inset-10 lg:-inset-20 pointer-events-none"
                   >
                     <motion.div
                       animate={{ rotate: 360 }}

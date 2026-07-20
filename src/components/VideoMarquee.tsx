@@ -115,6 +115,7 @@ export function VideoMarquee() {
               src={selectedVideo.url}
               style={{ width: "100%", aspectRatio: "16/9", display: "block", objectFit: "cover" }}
               controls
+              controlsList="nodownload"
               autoPlay
               loop
               playsInline
@@ -167,7 +168,7 @@ export function VideoMarquee() {
                 key={`${video.id}-${index}`}
                 whileHover={{ scale: 1.05, y: -10 }}
                 onClick={() => setSelectedVideo(video)}
-                className="relative w-[660px] aspect-video rounded-[32px] overflow-hidden glass border border-white/10 group shadow-2xl cursor-pointer"
+                className="relative w-165 aspect-video rounded-[32px] overflow-hidden glass border border-white/10 group shadow-2xl cursor-pointer"
               >
                 <video
                   src={video.url}

@@ -10,7 +10,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-8 group">
-              <img className="max-h-[70px] group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]" src="/images/navbarlogo.svg" alt="logo" />
+              <img className="max-h-17.5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]" src="/images/navbarlogo.svg" alt="logo" />
             </Link>
             <p className="text-white/60 max-w-md text-lg leading-relaxed mb-8">
               The official technical club of Guru Nanak College. Powering creativity, technology, and technical support for a digital future.

@@ -68,7 +68,7 @@ export default function About() {
 
         <motion.div
           style={{ y }}
-          className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-purple/10 blur-[150px] -z-10"
+          className="absolute top-0 right-0 w-125 h-125 bg-neon-purple/10 blur-[150px] -z-10"
         />
 
         <div className="absolute bottom-12 left-0 right-0 px-6 z-10 w-full">

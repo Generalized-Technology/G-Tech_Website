@@ -134,7 +134,7 @@ export function MediaPickerModal({ open, onClose, onSelect }: MediaPickerModalPr
           {/* Content */}
           <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
             {tab === 'device' ? (
-              <div className="flex flex-col items-center justify-center h-[40vh] min-h-[300px]">
+              <div className="flex flex-col items-center justify-center h-[40vh] min-h-75">
                 <div className="relative group w-full max-w-md">
                   <div className={`absolute inset-0 bg-neon-purple/20 blur-xl rounded-full transition-opacity ${uploading ? 'opacity-100 animate-pulse' : 'opacity-0 group-hover:opacity-100'}`} />
                   <div className="relative flex flex-col items-center justify-center p-12 glass border-2 border-dashed border-white/20 rounded-3xl hover:border-neon-purple/50 transition-colors cursor-pointer bg-white/5 overflow-hidden">
@@ -147,7 +147,7 @@ export function MediaPickerModal({ open, onClose, onSelect }: MediaPickerModalPr
                       <>
                         <UploadCloud className="w-16 h-16 text-white/30 mb-4 group-hover:text-neon-purple transition-colors" />
                         <p className="text-white/70 font-medium text-lg mb-2">Click to browse files</p>
-                        <p className="text-white/30 text-xs text-center max-w-[200px]">Images and videos will be saved to club_assets/uploads</p>
+                        <p className="text-white/30 text-xs text-center max-w-50">Images and videos will be saved to club_assets/uploads</p>
                       </>
                     )}
                     <input

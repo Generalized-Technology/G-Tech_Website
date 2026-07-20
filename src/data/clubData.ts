@@ -293,6 +293,30 @@ export const tools: Tool[] = [
     icon: "Layout",
     link: "/tools/whiteboard",
     category: "Creative"
+  },
+  {
+    id: "video-downloader",
+    name: "Video Downloader",
+    description: "Download videos from various platforms in different formats and qualities.",
+    icon: "Download",
+    link: "/tools/video-downloader",
+    category: "Utility"
+  },
+  {
+    id: "video-compressor",
+    name: "Video Compressor",
+    description: "Compress video files in your browser by adjusting resolution, bitrate, and frame rate.",
+    icon: "Video",
+    link: "/tools/video-compressor",
+    category: "Utility"
+  },
+  {
+    id: "instagram-carousel",
+    name: "Instagram Carousel",
+    description: "Slice panoramic or wide images into seamless 1:1 or 4:5 carousel slides for Instagram.",
+    icon: "Crop",
+    link: "/tools/instagram-carousel",
+    category: "Graphics"
   }
 ];
 

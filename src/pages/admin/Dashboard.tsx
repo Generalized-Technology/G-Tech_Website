@@ -636,7 +636,7 @@ export default function AdminDashboard() {
                         </div>
                         <div className="space-y-2 md:col-span-2">
                           <label className="text-xs uppercase text-white/30 ml-2">Description</label>
-                          <Textarea className="min-h-[150px] text-lg p-6 bg-white/5 border-white/10 rounded-2xl" placeholder="Description" onChange={e => setNewItem({...newItem, description: e.target.value})} />
+                          <Textarea className="min-h-37.5 text-lg p-6 bg-white/5 border-white/10 rounded-2xl" placeholder="Description" onChange={e => setNewItem({...newItem, description: e.target.value})} />
                         </div>
                       </>
                     )}
@@ -651,15 +651,23 @@ export default function AdminDashboard() {
                           <Input className="h-14 text-lg px-6 bg-white/5 border-white/10" placeholder="Taken By / PC" onChange={e => setNewItem({...newItem, taken_by: e.target.value})} />
                         </div>
                         <div className="space-y-2 md:col-span-2">
-                           <label className="text-xs uppercase text-white/30 ml-2">Gallery Image</label>
-                           <div 
-                             onClick={() => { setPickerTarget({ target: 'new', field: 'url' }); setPickerOpen(true); }}
-                             className="relative group h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer flex items-center px-6 hover:border-white/20 transition-colors"
-                           >
-                             <span className="text-white/50">{newItem.url ? 'Change Media...' : 'Choose Media...'}</span>
-                             <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5 group-hover:text-neon-purple transition-colors" />
+                           <label className="text-xs uppercase text-white/30 ml-2">Gallery Media (Upload or URL)</label>
+                           <div className="flex flex-col md:flex-row gap-4">
+                             <div 
+                               onClick={() => { setPickerTarget({ target: 'new', field: 'url' }); setPickerOpen(true); }}
+                               className="relative w-full md:w-1/2 group h-14 bg-white/5 border border-white/10 rounded-xl cursor-pointer flex items-center px-6 hover:border-white/20 transition-colors"
+                             >
+                               <span className="text-white/50">{newItem.url && !newItem.url.startsWith('http') ? 'Change File...' : 'Choose File...'}</span>
+                               <Upload className="absolute right-4 top-4 text-white/20 w-5 h-5 group-hover:text-neon-purple transition-colors" />
+                             </div>
+                             <Input 
+                               className="w-full md:w-1/2 h-14 text-lg px-6 bg-white/5 border-white/10" 
+                               placeholder="Or paste Video URL" 
+                               value={newItem.url || ""}
+                               onChange={e => setNewItem({...newItem, url: e.target.value})} 
+                             />
                            </div>
-                           {newItem.url && <p className="text-[10px] text-green-400 ml-2 truncate">Selected: {newItem.url}</p>}
+                           {newItem.url && <p className="text-[10px] text-green-400 ml-2 mt-2 truncate">Selected/Entered: {newItem.url}</p>}
                         </div>
                       </>
                     )}
@@ -686,17 +694,17 @@ export default function AdminDashboard() {
                         <TableRow className="hover:bg-transparent border-none">
                           {activeTab === "applications" && (
                             <>
-                              <TableHead className="text-white/50 min-w-[200px]">Name</TableHead>
-                              <TableHead className="text-white/50 min-w-[150px]">Portfolio</TableHead>
-                              <TableHead className="text-white/50 min-w-[200px]">Email</TableHead>
-                              <TableHead className="text-white/50 min-w-[150px]">WhatsApp No</TableHead>
-                              <TableHead className="text-white/50 min-w-[150px]">Department</TableHead>
-                              <TableHead className="text-white/50 min-w-[120px]">Roll No</TableHead>
-                              <TableHead className="text-white/50 min-w-[120px]">Reg No</TableHead>
-                              <TableHead className="text-white/50 min-w-[80px]">Year</TableHead>
-                              <TableHead className="text-white/50 min-w-[180px]">Interested Domain</TableHead>
-                              <TableHead className="text-white/50 min-w-[300px]">Purpose</TableHead>
-                              <TableHead className="text-white/50 min-w-[120px]">Status</TableHead>
+                              <TableHead className="text-white/50 min-w-50">Name</TableHead>
+                              <TableHead className="text-white/50 min-w-37.5">Portfolio</TableHead>
+                              <TableHead className="text-white/50 min-w-50">Email</TableHead>
+                              <TableHead className="text-white/50 min-w-37.5">WhatsApp No</TableHead>
+                              <TableHead className="text-white/50 min-w-37.5">Department</TableHead>
+                              <TableHead className="text-white/50 min-w-30">Roll No</TableHead>
+                              <TableHead className="text-white/50 min-w-30">Reg No</TableHead>
+                              <TableHead className="text-white/50 min-w-20">Year</TableHead>
+                              <TableHead className="text-white/50 min-w-45">Interested Domain</TableHead>
+                              <TableHead className="text-white/50 min-w-75">Purpose</TableHead>
+                              <TableHead className="text-white/50 min-w-30">Status</TableHead>
                               <TableHead className="text-white/50 text-right sticky right-0 bg-mesh/90 backdrop-blur-md">Actions</TableHead>
                             </>
                           )}
@@ -1172,7 +1180,7 @@ export default function AdminDashboard() {
                 {previewFile.mime.startsWith('image/') ? (
                   <img src={previewFile.url} className="w-full max-h-[80vh] object-contain rounded-2xl" />
                 ) : (
-                  <video src={previewFile.url} controls autoPlay className="w-full max-h-[80vh] rounded-2xl" />
+                  <video src={previewFile.url} controls controlsList="nodownload" autoPlay className="w-full max-h-[80vh] rounded-2xl" />
                 )}
               </motion.div>
             </motion.div>

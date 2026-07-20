@@ -10,16 +10,23 @@ import {
   Search,
   ExternalLink,
   Terminal,
+  Download,
+  Video,
+  Crop,
 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import VideoDownloader from "./tools/VideoDownloader";
 
 const iconMap = {
   QrCode: QrCode,
   Layout: Layout,
   FileText: FileText,
   RefreshCw: RefreshCw,
+  Download: Download,
+  Video: Video,
+  Crop: Crop,
 };
 
 export default function Tools() {
