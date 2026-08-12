@@ -9,11 +9,20 @@ const marqueeCSS = `
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+@keyframes marquee-scroll-vertical {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
 .marquee-track {
   animation: marquee-scroll 40s linear infinite;
 }
 .marquee-track:hover {
   animation-play-state: paused;
+}
+@media (max-width: 768px) {
+  .marquee-track {
+    animation: marquee-scroll-vertical 30s linear infinite !important;
+  }
 }
 `;
 
@@ -158,17 +167,17 @@ export function VideoMarquee() {
           />
         </div>
 
-        <div className="relative mt-20">
+        <div className="relative mt-10 md:mt-20 overflow-hidden h-[80vh] md:h-auto flex justify-center">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-40 bg-neon-purple/10 blur-[120px] rounded-full pointer-events-none" />
 
           {/* CSS-animated marquee track — hover pauses via animation-play-state */}
-          <div className="marquee-track flex gap-12 w-max">
+          <div className="marquee-track flex flex-col md:flex-row gap-6 md:gap-12 w-full md:w-max items-center md:items-start">
             {videoList.length > 0 ? [...videoList, ...videoList].map((video, index) => (
               <motion.div
                 key={`${video.id}-${index}`}
                 whileHover={{ scale: 1.05, y: -10 }}
                 onClick={() => setSelectedVideo(video)}
-                className="relative w-165 aspect-video rounded-[32px] overflow-hidden glass border border-white/10 group shadow-2xl cursor-pointer"
+                className="relative w-[90%] md:w-165 aspect-video rounded-2xl md:rounded-[32px] overflow-hidden glass border border-white/10 group shadow-2xl cursor-pointer shrink-0"
               >
                 <video
                   src={video.url}
@@ -189,9 +198,9 @@ export function VideoMarquee() {
                   </div>
                 </div>
 
-                <div className="absolute bottom-8 left-8 right-8 pointer-events-none">
-                  <p className="text-white font-sans text-2xl uppercase drop-shadow-lg">{video.title}</p>
-                  <div className="w-16 h-1.5 bg-neon-purple mt-4 rounded-full shadow-[0_0_10px_rgba(168,85,247,1)]" />
+                <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 right-4 md:right-8 pointer-events-none">
+                  <p className="text-white font-sans text-lg md:text-2xl uppercase drop-shadow-lg">{video.title}</p>
+                  <div className="w-16 h-1.5 bg-neon-purple mt-2 md:mt-4 rounded-full shadow-[0_0_10px_rgba(168,85,247,1)]" />
                 </div>
               </motion.div>
             )) : (

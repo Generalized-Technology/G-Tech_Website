@@ -43,9 +43,9 @@ export default function About() {
   }, []);
 
   return (
-    <main className="pb-30 bg-mesh">
+    <main className="pb-16 md:pb-30 bg-mesh">
       {/* About Section */}
-      <section className="relative overflow-hidden min-h-screen flex items-center pt-32 pb-20">
+      <section className="relative overflow-hidden min-h-screen flex items-center pt-20 md:pt-32 pb-10 md:pb-20">
         {/* Background Image Carousel with Gradient Overlay */}
         <div className="absolute inset-0 z-0 overflow-hidden bg-[#050510]">
           <AnimatePresence>
@@ -90,7 +90,7 @@ export default function About() {
         </div>
       </section>
 
-      <div className="container mx-auto px-6 max-w-[75%] py-10">
+      <div className="container mx-auto px-6 max-w-full md:max-w-[75%] py-8 md:py-10">
         <SectionHeader
           align="center"
           title="About G-Tech Club"
@@ -123,9 +123,9 @@ export default function About() {
       </div>
 
       {/* Leads Section */}
-      <section className="py-32 relative">
+      <section className="py-16 md:py-32 relative">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-16 gap-8">
             <SectionHeader
               align="left"
               title="Our Leadership"
